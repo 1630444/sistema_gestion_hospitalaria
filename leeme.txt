@@ -1,0 +1,19 @@
+
+
+
+
+------------------------------------------------------------------------------------------
+
+Para crear tienes que usar la plantilla que se encuentra en pages
+con esa nombras una carpeta para ti y en los nombres de la pagina pones tu
+tipo agregar_carrera etc.
+Tienes que configurar los datos que se encuentran en pages/menus/
+el define tienes que poner la raiz de donde se encuentre tu services 
+de la carpeta de html
+La funcionalidad esta casi completa solo es necesario que una vez la 
+consulta realizada vayas mostrando los campos, en el metodo post ahi
+obtendras los names de todos tus campos agregados
+cualquier duda con su servilleta.
+
+
+------------------------------------------------------------------------------------------
