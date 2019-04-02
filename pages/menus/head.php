@@ -1,6 +1,6 @@
 <?php
 if(!defined('RAIZ')){
-    define('RAIZ','/Web/siiupv/');
+    define('RAIZ','/hospital/');
 }
  ?>
 <head>
@@ -19,7 +19,7 @@ if(!defined('RAIZ')){
   <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect. -->
-  <link rel="stylesheet" href="<?php echo RAIZ . 'dist/css/skins/skin-blue.min.css' ?>">
+  <link rel="stylesheet" href="<?php echo RAIZ . 'dist/css/skins/skin-purple.min.css' ?>">
 
 
   <link rel="stylesheet" href="<?php echo RAIZ . 'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' ?>">

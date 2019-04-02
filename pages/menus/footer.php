@@ -1,6 +1,6 @@
 <?php
 if(!defined('RAIZ')){
-    define('RAIZ','/Web/siiupv/');
+    define('RAIZ','/hospital/');
 }
  ?>
 <!-- Main Footer -->

@@ -1,10 +1,9 @@
 <?php
 
-define('RAIZ','/Web/siiupv/');
+define('RAIZ','/hospital/');
 require 'pages/sesion/abre_sesion.php';
 
  ?>
-
 <!DOCTYPE html>
 
 <!--
@@ -33,7 +32,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-purple sidebar-mini">
 <div class="wrapper">
 
   <?php require 'pages/menus/header.php' ?>

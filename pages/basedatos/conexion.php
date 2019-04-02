@@ -1,7 +1,10 @@
 <?php
-  $bd ='siiupv';
+
+  header('Content-Type: charset=utf-8');
+
+  $bd ='Hospital';
   $servidor='localhost';
-  $usuario='alan';
+  $usuario='root';
   $contrasena='estanque98';
 
   //creamos una conexión a la base de datos
@@ -35,7 +38,6 @@
   function selectEspecial($conexion,$query){
 
     $resultado = mysqli_query($conexion,$query) or die('Error al ejecutar la consulta');
-
     if(mysqli_num_rows($resultado)==0){
       return false;
     }else{
