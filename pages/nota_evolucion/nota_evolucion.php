@@ -1,6 +1,23 @@
+<!-- El médico usará esta interfaz -->
 <?php
   require '../basedatos/conexion.php';
-  $res= select($conexion,'nota_evolucion');
+  require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=3){
+    header('Location: ../../index.php');
+		exit;
+  }
+
+
+  $id_hosp = $_GET['id'];
+  
+  $query = "select id_nota_evolucion, abuso_sustancia, id_cita, pronostico
+              from nota_evolucion
+              where id_cita = {$id_hosp}";
+  
+  //echo $query;
+
+  $res= selectEspecial($conexion,$query);
+
  ?>
  <!DOCTYPE html>
 <!--
@@ -9,7 +26,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html>
 
-<title>Urgencias.</title>
+<title>Urgencias - nota de evolución.</title>
 
 <?php require '../menus/head.php' ?>
 
@@ -54,7 +71,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <thead>
                    <tr>
                   <th rowspan="1" colspan="5">
-                    <a  href="agregar_nota_evolucion.php">
+                    <a  href="agregar_nota_evolucion.php?id=<?php echo $id_hosp ?>">
                       <h5><i class="fa fa-fw fa-gears"></i>Agregar un Nuevo Registro</h5></a>
                     </th>
                 </tr>
@@ -65,7 +82,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">Número de cita
                   </th>
-                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Pronóstico</th>                  
+                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Pronóstico</th>
+                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Herramientas
+                  </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -79,12 +98,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     echo "<td>".$nota["pronostico"]."</td>";
                     echo "<td>
                     <div class=\"btn-group\">
-                      <a  href=\"modificar_nota_evolucion.php?id=".$nota["id_nota_evolucion"]."\" type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-fw fa-pencil\"></i></a>
-                      <a  href=\"borrar_nota_evolucion.php?id=".$nota["id_nota_evolucion"]."\" type=\"button\" class=\"btn btn-danger\"><i class=\"fa fa-fw fa-trash\"></i></a>
+                      <a  href=\"modificar_nota_evolucion.php?id=".$nota["id_nota_evolucion"]."&cita=".$nota["id_cita"]."\" type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-fw fa-pencil\"></i></a>
+                      <a  href=\"borrar_nota_evolucion.php?id=".$nota["id_nota_evolucion"]."&cita=".$nota["id_cita"]."\" type=\"button\" class=\"btn btn-danger\"><i class=\"fa fa-fw fa-trash\"></i></a>
                     </div>
                   </td>";
                     echo "</tr>";
-
                   }
                 ?>
 
@@ -92,9 +110,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                    <!--   -->
               </tbody>
                 <tfoot>
+                <!--<div class="box-footer">-->
+                
+                <!--</div>-->
                 <!--<tr><th rowspan="1" colspan="1">Rendering engine</th><th rowspan="1" colspan="1">Browser</th><th rowspan="1" colspan="1">Platform(s)</th><th rowspan="1" colspan="1">Engine version</th><th rowspan="1" colspan="1">CSS grade</th></tr>-->
                 </tfoot>
-              </table></div></div>
+               </table>
+                  <a id="" href="../hospitalizaciones/hospitalizaciones.php" class="btn btn-primary"> Hospitalización </a>  
+                  </div>
+                </div>
               </div>
             </div>
             <!-- /.box-body -->

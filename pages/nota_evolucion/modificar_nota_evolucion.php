@@ -1,6 +1,14 @@
 <?php
   require '../basedatos/conexion.php';
+  require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=3){
+    header('Location: ../../index.php');
+		exit;
+  }
+
   $dato = $_GET['id'];
+  $cita = $_GET['cita'];
+
   $query = "select * from nota_evolucion where id_nota_evolucion = '{$dato}'";
   $res= selectEspecial($conexion,$query);
 
@@ -16,6 +24,7 @@
       //  $errores = 'Por favor, ingrese un ID del cuatrimestre<br/>';
       //}
 
+      /*
       if(empty($descripcion))
         $errores .= 'Por favor, describa las sustancias que consume el paciente.<br/>';
       else if(strlen($descripcion) > 250)
@@ -24,13 +33,14 @@
       if(empty($pronostico))
         $errores .= 'Por favor, ingrese un pronóstico para el paciente.<br/>';
       else if(strlen($pronostico) > 250)
-        $errores .= 'Asegurese de no superar los 250 caracteres en el pronóstico del paciente.<br/>';
+        $errores .= 'Asegurese de no superar los 250 caracteres en el pronóstico del paciente.<br/>';*/
 
       if(empty($errores)){
-        $query = "update nota_evolucion set abuso_sustancia='{$descripcion}', pronostico='{$pronostico}' WHERE id_nota_evolucion={$id_nota}";       
-        if(selectEspecial($conexion,$query)){          
-          redirect('nota_evolucion.php');
-        }
+        $query = "update nota_evolucion set abuso_sustancia='{$descripcion}', pronostico='{$pronostico}' WHERE id_nota_evolucion={$id_nota}";
+        selectEspecial($conexion,$query);
+        //if(selectEspecial($conexion,$query)){          
+        redirect("nota_evolucion.php?id={$cita}");
+        //}
       }
   }
  ?>
@@ -73,7 +83,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . "?id={$dato}" ?>" role="form">
+            <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . "?id={$dato}&cita={$cita}" ?>" role="form">
             
 
               <?php foreach ($res as $nota) {    ?>
@@ -86,29 +96,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </h5>
 
                   
-                  <div class="input-group">
+                  <div class="form-group">
                     <label for="">Número de nota</label>
-                    <input type="text" class="form-control" name="id_nota_evolucion" placeholder="" value=" <?php echo $nota["id_nota_evolucion"]?>" required readonly>
+                    <input type="text" class="form-control" name="id_nota_evolucion" placeholder="" value=" <?php echo $nota["id_nota_evolucion"]?>" required readonly></input>
                   </div>
                   <br>
  
                   <div class="form-group">
                     <label for="">Abuso de sustancias</label>
-                    <textarea type="text" class="form-control" name="descripcion" placeholder="" value="<?php echo $nota["abuso_sustancia"]?>" required><?php echo $nota["abuso_sustancia"]?></textarea>
+                    <input type="text" class="form-control" name="descripcion" placeholder="" value="<?php echo $nota["abuso_sustancia"]?>" required></input>
                   </div>
                   <br>
 
                   
-                  <div class="input-group">
+                  <div class="form-group">
                     <label for="">Número de cita</label>
-                    <input type="text" class="form-control" name="id_cita" placeholder="" value="<?php echo $nota["id_cita"]?>" required readonly>
+                    <input type="text" class="form-control" name="id_cita" placeholder="" value="<?php echo $nota["id_cita"]?>" required readonly></input>
                   </div>
                   <br>
 
                   
-                  <div class="input-group">
+                  <div class="form-group">
                     <label for="">Pronóstico</label>
-                    <textarea type="text" class="form-control" name="descripcion" placeholder="" value="<?php echo $nota["pronostico"]?>" required><?php echo $nota["pronostico"]?></textarea>
+                    <input type="text" class="form-control" name="pronostico" placeholder="" value="<?php echo $nota["pronostico"]?>" required></input>
                   </div>
                   <br> 
 

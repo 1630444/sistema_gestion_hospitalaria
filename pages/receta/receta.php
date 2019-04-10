@@ -1,5 +1,11 @@
 <?php
   require '../basedatos/conexion.php';
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=5){
+    header('Location: ../../index.php');
+		exit;
+  }
+
   $query = "SELECT r.id_receta as id, p.nss as nss, m.no_cedula as cedula, c.fecha as fecha, r.estado as estado 
   FROM receta r , cita c, pacientes p, medico m 
   where r.id_cita = c.id_cita and c.id_paciente = p.id_paciente and c.id_medico = m.id_medico";
@@ -64,7 +70,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label=""> Cedula Medico </th>
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Fecha</th>
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Estado </th>
-                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Herramientas </th>
+                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Ver/Aceptar </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -76,7 +82,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     echo "<td>".$receta["nss"]."</td>";
                     echo "<td>".$receta["cedula"]."</td>";
                     echo "<td>".$receta["fecha"]."</td>";
-                    echo "<td>".$receta["estado"]."</td>";
+                    if($receta["estado"] == 0){
+                      echo "<td>"."Pendiente"."</td>";  
+                    }else{
+                      echo "<td>"."Aceptada"."</td>";  
+                    }
+                    
                     if($receta["estado"] == 0){
                       echo "<td>
                         <div class=\"btn-group\">

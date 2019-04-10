@@ -3,7 +3,7 @@
   $res= select($conexion,'urgencias');
   
   $id = $_GET['id'];
-  $delete_id = borrar_registro($conexion,$id,'urgencias','id_urgencia');
+  $delete_id = crear_registro($conexion,"DELETE FROM urgencias WHERE id_urgencia = {$id}");
   if($delete_id){
       echo   "Urgencia eliminada.";
       redirect('urgencias.php');

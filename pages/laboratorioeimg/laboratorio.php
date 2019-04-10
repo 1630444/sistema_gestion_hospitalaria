@@ -1,17 +1,25 @@
 <?php
+//medicos  - imagenologo y laboratorista
   require '../basedatos/conexion.php';
-   /*$query = "SELECT ce.id_cita_estudio as id, 
-                    usu.nombre_usuario as Paciente, 
-                    est.tipo as Estudio, 
-                    ce.fecha as FechaYHora 
-            FROM  cita_estudio ce 
-            INNER JOIN estudio est ON ce.id_estudio = est.id_estudio
-            INNER JOIN interconsulta inter ON ce.id_interconsulta = inter.id_interconsulta 
-            INNER JOIN cita on inter.id_cita = cita.id_cita 
-            INNER JOIN pacientes pac ON cita.id_paciente = pac.id_paciente 
-            INNER JOIN usuarios usu ON usu.id_usuario = pac.usuario_id
-            WHERE cita.fecha = ('2019-09-03');"; //hay que modificar la fecha y hora por las del sistema
-  $res= selectEspecial($conexion,$query);*/
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=3){
+      header('Location: ../../index.php');
+		exit;
+  }
+if(!($_SESSION["especialidad"]==9 || $_SESSION["especialidad"]==10)){
+      header('Location: ../../index.php');
+		exit;
+  }
+
+   $query = "SELECT ce.id_cita_estudio as id, usu.nombre as Paciente, est.tipo as Estudio, ce.fecha as FechaYHora, folio
+              FROM cita_estudio ce 
+              INNER JOIN estudio est ON ce.id_estudio = est.id_estudio 
+              INNER JOIN interconsulta inter ON ce.id_interconsulta = inter.id_interconsulta 
+              INNER JOIN cita on inter.id_cita = cita.id_cita 
+              INNER JOIN pacientes pac ON cita.id_paciente = pac.id_paciente 
+              INNER JOIN usuarios usu ON usu.id_usuario = pac.usuario_id 
+              WHERE DATE(ce.fecha) =('".date("Y-m-d")."')  and ce.id_estudio<4 and ce.img = 0"; //date obtiene la fecha del sistema
+  $res= selectEspecial($conexion,$query);
   //$res= select($conexion,'cita_estudio');
  ?>
  <!DOCTYPE html>
@@ -66,8 +74,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <thead>
                    <tr>
                   <th rowspan="1" colspan="5">
-                    <a  href="#">
-                      <h5><i class="fa fa-fw fa-gears"></i>.</h5></a>
+                    
                     </th>
                 </tr>
                 <tr role="row">
@@ -101,49 +108,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     echo "</tr>";
 
                   }*/
-               
+               /*
                     echo "<tr role=\"row\" class=\"odd\">";
                     echo "<td class=\"sorting_2\">1 </td>";
-                    echo "<td>2</td>";
-                    echo "<td>3</td>";
-                    echo "<td>4</td>";
+                    echo "<td>Genaro Juan</td>";
+                    echo "<td>Sangre</td>";
+                    echo "<td>2019-04-02 14:25</td>";
                     echo "<td>
                    <ul class='navbar-nav' style='list-style: none;'>
                    <li class='dropdown notifications-menu'>
             <a href='#' class='dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
               <i class='fa fa-bell-o'></i>
-              <span class='label label-warning'>10</span>
+              <span class='label label-success'>1</span>
             </a>
             <ul class='dropdown-menu'>
-              <li class='header'>You have 10 notifications</li>
+              <li class='header'>Folio de estudio.</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class='menu'>
                   <li>
-                    <a href='#'>
-                      <i class='fa fa-users text-aqua'></i> 5 new members joined today
-                    </a>
-                  </li>
-                  <li>
-                    <a href='#'>
-                      <i class='fa fa-warning text-yellow'></i> Very long description here that may not fit into the
-                      page and may cause design problems
-                    </a>
-                  </li>
-                  <li>
-                    <a href='#'>
-                      <i class='fa fa-users text-red'></i> 5 new members joined
-                    </a>
-                  </li>
-                  <li>
-                    <a href='#'>
-                      <i class='fa fa-shopping-cart text-green'></i> 25 sales made
-                    </a>
-                  </li>
-                  <li>
-                    <a href='#'>
-                      <i class='fa fa-user text-red'></i> You changed your username
-                    </a>
+                  <a >
+                      <i class='fa fa-users text-red'></i> Sangre: <b>2019-04-011</b>
+                   </a>
                   </li>
                 </ul>
               </li>
@@ -153,7 +139,45 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       </td>";
   
                     echo "</tr>";
+*/
+  
+                 foreach ($res as $uregencia) {
+                    echo "<tr role=\"row\" class=\"odd\">";
+                    echo "<td class=\"sorting_2\">".$uregencia["id"]." </td>";
+                    echo "<td>".$uregencia["Paciente"]."</td>";
+                    echo "<td>".$uregencia["Estudio"]."</td>";
+                    echo "<td>".$uregencia["FechaYHora"]."</td>";
+                    echo "<td>
+                    
+                    <ul class='navbar-nav' style='list-style: none;'>
+                       <li class='dropdown notifications-menu'>
+                         <a href='#' class='dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
+                            <i class='fa fa-bell-o'></i>
+                            <span class='label label-success'>1</span>
+                          </a>
+                          <ul class='dropdown-menu'>
+                            <li class='header'>Folio de estudio.</li>
+                            <li>
+                              <!-- inner menu: contains the actual data -->
+                              <ul class='menu'>
+                                <li>
+                                <a >
+                                    <i class='fa fa-users text-red'></i> {$uregencia["folio"]}</b>
+                                 </a>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </li>
+                    </ul>
+                   
+                    
+                    
+                  </td>";
+                    echo "</tr>";
 
+                  }
+               
                   
  
                 ?>

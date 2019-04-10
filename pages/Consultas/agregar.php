@@ -1,5 +1,10 @@
 <?php
   require '../basedatos/conexion.php';
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=3){
+    header('Location: ../../index.php');
+		exit;
+  }
 
     $table = 'tabla';
     $errores = '';

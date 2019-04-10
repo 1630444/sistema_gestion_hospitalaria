@@ -1,6 +1,15 @@
+<!-- El médico usará esta interfaz -->
 <?php
   require '../basedatos/conexion.php';
-  $res= select($conexion,'urgencias');
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=3){
+    header('Location: ../../index.php');
+		exit;
+  }
+
+  #$res = selectEspecial($conexion, "SELECT u.id_urgencia idurgencia, u.diagnostico udiagnostico, u.fecha ufecha, p.nombre pnombre, p.apellido papellido,  m.nombre mnombre, m.apellido mapellido FROM urgencias u, pacientes p, medico m WHERE u.id_paciente = p.id_paciente AND u.id_medico = m.id_medico");
+
+   $res = selectEspecial($conexion, "SELECT u.id_urgencia idurgencia, u.diagnostico udiagnostico, u.fecha ufecha, us.nombre pnombre, us.apellido papellido,  u.id_medico idmedico FROM urgencias u, pacientes p, usuarios us WHERE u.id_paciente = p.id_paciente AND p.usuario_id = us.id_usuario");
  ?>
 <!DOCTYPE html>
 <!--
@@ -17,6 +26,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php require '../menus/sidebar.php' ?>
 
   <div class="content-wrapper">
+    
+      <!--Titulo dentro del contened-->
+      <section class="content-header">
+        <h1>
+          Urgencias
+          <small>Tabla de urgencias registradas.</small>
+        </h1>
+      </section>
+
 
     <!-- Main content -->
     <section class="content container-fluid">
@@ -50,7 +68,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <tr role="row">
                   <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">ID Urgencia
                   </th>
-                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">ID Paciente
+                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Paciente
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">ID Médico
                   </th>
@@ -66,15 +84,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <?php
                   foreach ($res as $urgen) {
                     echo "<tr role=\"row\" class=\"odd\">";
-                    echo "<td class=\"sorting_2\">".$urgen["id_urgencia"]."</td>";
-                    echo "<td>".$urgen["id_paciente"]."</td>";
-                    echo "<td>".$urgen["id_medico"]."</td>";
-                    echo "<td>".$urgen["diagnostico"]."</td>";
-                    echo "<td>".$urgen["fecha"]."</td>";
+                    echo "<td class=\"sorting_2\">".$urgen["idurgencia"]."</td>";
+                    echo "<td>".$urgen["pnombre"]."  ".$urgen["papellido"]."</td>";
+                    echo "<td>".$urgen["idmedico"]."</td>";
+                    echo "<td>".$urgen["udiagnostico"]."</td>";
+                    echo "<td>".$urgen["ufecha"]."</td>";
                     echo "<td>
                     <div class=\"btn-group\">
-                      <a  href=\"modificar_urgencia.php?id=".$urgen["id_urgencia"]."\" type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-fw fa-pencil\"></i></a>
-                      <a  href=\"borrar_urgencia.php?id=".$urgen["id_urgencia"]."\" type=\"button\" class=\"btn btn-danger\"><i class=\"fa fa-fw fa-trash\"></i></a>
+                      <a  href=\"modificar_urgencia.php?id=".$urgen["idurgencia"]."\" type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-fw fa-pencil\"></i></a>
+                      <a  href=\"borrar_urgencia.php?id=".$urgen["idurgencia"]."\" type=\"button\" class=\"btn btn-danger\"><i class=\"fa fa-fw fa-trash\"></i></a>
                     </div>
                   </td>";
                     echo "</tr>";

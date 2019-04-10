@@ -2,9 +2,11 @@
   require '../basedatos/conexion.php';
   
   $id = $_GET['id'];
-  $delete_id = borrar_registro($conexion,$id,'usuarios');
+  $query = "DELETE FROM usuarios WHERE id_usuario = {$id};";
+  $delete_id = crear_registro($conexion,$query);
   if($delete_id){
-      echo   "Eliminado.";
+      echo   "Cliente eliminado.";
+      unlink($nombre);
       redirect('pacientes.php');
   } else {
       echo "Eliminación falló" ;

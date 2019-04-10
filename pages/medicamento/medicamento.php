@@ -1,5 +1,11 @@
 <?php
   require '../basedatos/conexion.php';
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=5){
+    header('Location: ../../index.php');
+		exit;
+  }
+
 
   $res= select($conexion,'medicamento');
  ?>

@@ -1,0 +1,22 @@
+
+
+
+------------------------------------------------------------------------------------------
+
+CONFIGURACIÓN DE BASE DE DATOS
+  Se debe configurar las variables 'servidor', 'usuario' y 'contrasena' correspondientes
+  al host que tenga la base de datos 'Hospital'.
+  En el archio : "pages/basedatos/conexion.php"
+
+CONFIGURACIÓN DE LOGIN
+  Para el buen funcionamiento del login se debe hacer una cambio de la ubicación del 
+  archivo 'login.php'. En este caso se debe poner la URL completa en el archivo:
+  "pages/sesion/abre_sesion.php"
+  En la linea 4 se cambia 
+  header('Location: <URL DEL LOGIN>');
+
+  Por ejemplo: "http://eldelmomo.me/hospital/login.php"
+
+------------------------------------------------------------------------------------------
+
+Prueba de conexion

@@ -1,7 +1,15 @@
 <?php
   require '../basedatos/conexion.php';
-  $resmed = select($conexion,'medico');
-  $respac = select($conexion,'pacientes');
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=3){
+    header('Location: ../../index.php');
+		exit;
+  }
+
+
+  $resmed = selectEspecial($conexion,"select m.id_medico idmedico, u.nombre unombre from medico m, usuarios u where m.usuario_id = u.id_usuario");
+  $respac = selectEspecial($conexion,"select p.id_paciente idpaciente, u.nombre unombre from pacientes p, usuarios u where p.usuario_id = u.id_usuario");
+
 
     $table = 'urgencias';
     $errores = '';
@@ -26,15 +34,23 @@
           $errores .= 'Dame el diagnóstico <br/>';
         }
 
-        if(empty($fecha)){
+        if(empty($fecha) or $fecha != date("Y-m-d") ){
           $errores .= 'Dame la Fecha de Ingreso <br/>';
         }
 
         if(empty($errores)){
-          $query = "insert into {$table} (id_paciente, id_medico, diagnostico, fecha) values ({$id_paciente},{$id_medico},'{$diagnostico}','{$fecha}');";
-          $agregar = crear_registro($conexion,$query);
-          if($agregar){
-            redirect('urgencias.php');
+
+          # Consulta para evitar que existan registros iguales en la tabla
+          $res = selectEspecial($conexion,"SELECT * FROM urgencias WHERE id_paciente = {$id_paciente} AND id_medico = {$id_medico} AND fecha = '{$fecha}'");
+          
+          if($res == false){
+            $query = "insert into {$table} (id_paciente, id_medico, diagnostico, fecha) values ({$id_paciente},{$id_medico},'{$diagnostico}','{$fecha}');";
+            $agregar = crear_registro($conexion,$query);
+            if($agregar){
+              redirect('urgencias.php');
+            }
+          }else{
+            echo "El registro ya existe. Ingrese datos Distintos.";
           }
         }
     }
@@ -54,6 +70,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php require '../menus/sidebar.php' ?>
 
   <div class="content-wrapper">
+
+         <!--Titulo dentro del contened-->
+      <section class="content-header">
+        <h1>
+          Urgencias
+          <small>Nuevo registro de urgencias.</small>
+        </h1>
+      </section>
 
     <!-- Main content -->
     <section class="content container-fluid">
@@ -77,21 +101,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <input type="text" class="form-control" name="id" placeholder="Ingrese el ID" required>
                   </div>  ES AUTOINCREMENTABLE-->
                   <div class="form-group">
-                    <label for="id_medico">ID del Médico</label>
+                    <label for="id_medico">Médico</label>
                     <select name="id_medico" class="form-control">
                   <?php
                     while ($row = mysqli_fetch_array($resmed)) {
-                      echo "<option value='{$row['id_medico']}'>{$row['nombre']}</option>"; 
+                      echo "<option value='{$row['idmedico']}'>{$row['unombre']}</option>"; 
                     }
                   ?> 
                   </select>
                   </div>
                   <div class="form-group">
-                    <label for="id_paciente">ID del Paciente</label>
+                    <label for="id_paciente">Paciente</label>
                     <select name="id_paciente" class="form-control">
                   <?php
                     while ($row = mysqli_fetch_array($respac)) {
-                      echo "<option value='{$row['id_paciente']}'>{$row['nombre']}</option>"; 
+                      echo "<option value='{$row['idpaciente']}'>{$row['unombre']}</option>"; 
                     }
                   ?> 
                   </select>
@@ -102,7 +126,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </div>
                   <div class="form-group">
                     <label for="fecha">Fecha</label>
-                    <input type="date" class="form-control" name="fecha" required>
+                    <input type="date" class="form-control" name="fecha" value= <?php echo date("Y-m-d"); ?> required>
                   </div>
                 </div>
                 <!-- /.box-body -->

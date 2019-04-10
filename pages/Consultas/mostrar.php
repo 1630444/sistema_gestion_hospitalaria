@@ -1,8 +1,21 @@
 <?php
   require '../basedatos/conexion.php';
-  $query = "SELECT id_cita, (SELECT nombre FROM usuarios WHERE id_usuario = P.usuario_id) nombre, TIME(fecha) hora 
+  require '../sesion/abre_sesion.php';
+
+  if($_SESSION['tipo']!=3){
+    header('Location: ../../index.php');
+		exit;
+  }
+
+  /*$query = "SELECT id_cita, (SELECT nombre FROM usuarios WHERE id_usuario = P.usuario_id) nombre, hora 
   FROM pacientes P, cita C 
-  WHERE P.id_paciente = C.id_paciente"; //hay que modificar la fecha y hora por las del sistema
+  WHERE P.id_paciente = C.id_paciente";*/
+  $usera = $_SESSION['usuario'];
+
+  $query="SELECT id_cita, (SELECT nombre FROM usuarios WHERE id_usuario = P.usuario_id) nombre, hora 
+  FROM pacientes P, cita C 
+  WHERE P.id_paciente = C.id_paciente and C.id_medico = 
+  (SELECT id_medico FROM medico WHERE usuario_id = (SELECT id_usuario FROM usuarios WHERE nombre_usuario = '$usera')) and C.estado = 0";
   $res= selectEspecial($conexion,$query);
  ?>
  <!DOCTYPE html>
@@ -83,11 +96,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     echo "<td>".$nota["nombre"]."</td>";
                     echo "<td>
                     <div class=\"btn-group\">
-                      <a  href=\"modificar.php?id=".$nota["id_cita"]."\" type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-fw fa-play-circle\"></i></a>
+                      <a  onclick=\"cargar(" . $nota["id_cita"] . ");\" href=\"modificar.php?id=".$nota["id_cita"]."\" type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-fw fa-heartbeat\"></i></a>
                     </div>
                   </td>";
                     echo "</tr>";
-
                   }
                 ?>
 
@@ -105,32 +117,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- /.box -->
         <!-- /.col -->
       </div>
-
-<!-- Tab links -->
-<div class="tab">
-  <button class="tablinks" onclick="openCity(event, 'London')">London</button>
-  <button class="tablinks" onclick="openCity(event, 'Paris')">Paris</button>
-  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
-</div>
-
-<!-- Tab content -->
-<div id="London" class="tabcontent">
-  <h3>London</h3>
-  <p>London is the capital city of England.</p>
-</div>
-
-<div id="Paris" class="tabcontent">
-  <h3>Paris</h3>
-  <p>Paris is the capital of France.</p> 
-</div>
-
-<div id="Tokyo" class="tabcontent">
-  <h3>Tokyo</h3>
-  <p>Tokyo is the capital of Japan.</p>
-</div>
-
-
-
 
     </section>
     <!-- /.content -->

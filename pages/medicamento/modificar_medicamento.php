@@ -1,5 +1,11 @@
 <?php
   require '../basedatos/conexion.php';
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=5){
+    header('Location: ../../index.php');
+		exit;
+  }
+
   $id = $_GET['id'];
   $query = "select * from medicamento where id_medicamento = '{$id}';";
   $medicamento = selectEspecial($conexion,$query);
@@ -40,7 +46,7 @@
             unlink($imagenactual);
             move_uploaded_file($uploadfile_temporal,$uploadfile_nombre);
         }else{
-            $query = "update {$table} SET nombre='{$nombre}',almacen='{$almacen}',via_administracio='{$via}',tipo='{$tipo}' where id_medicamento='{$id}';";
+            $query = "update {$table} SET nombre='{$nombre}',almacen='{$almacen}',via_administracion='{$via}',tipo='{$tipo}' where id_medicamento='{$id}';";
         }
         $agregar = crear_registro($conexion,$query);
         echo $query;
@@ -117,15 +123,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <option value="<?php echo $medi["via_administracion"] ?>"><?php echo $medi["via_administracion"] ?></option>
                     <option value="oral">oral</option>
                     <option value="intramuscular">intramuscular</option>
+                    <option value="intravenosa">intravenosa</option>
+                    <option value="subcutanea">subcutanea</option>
+                    <option value="inhalatoria">inhalatoria</option>
+                    <option value="transdermica">transdermica</option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="">Tipo</label>
                   <select name="tipo" class="form-control" >
-                    <option value="<?php echo $medi["tipo"] ?>"><?php echo $medi["tipo"] ?></option>
+                    <option value="<?php echo $medi["tipo"] ?>"><?php echo $medi["tipo"] ?></option>                    
                     <option value="capsulas">capsulas</option>
                     <option value="jarabes">jarabes</option>
                     <option value="jeringas">jeringas</option>
+                    <option value="capsulas">capsulas</option>
+                    <option value="pastillas">pastillas</option>
                   </select>
                 </div>
 

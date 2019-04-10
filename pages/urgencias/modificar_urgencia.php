@@ -1,10 +1,17 @@
 <?php
   require '../basedatos/conexion.php';
-  $dato = $_GET['id'];
-  $res= obtener_resultado_por_id2($conexion,$dato,'urgencias','id_urgencia');
-  $resmed = select($conexion,'medico');
-  $respac = select($conexion,'pacientes');
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=3){
+    header('Location: ../../index.php');
+		exit;
+  }
 
+  $dato = $_GET['id'];
+  $res = selectEspecial($conexion, "select * from urgencias where id_urgencia = {$dato}");
+  $resmed = selectEspecial($conexion,"select m.id_medico idmedico, u.nombre unombre from medico m, usuarios u where m.usuario_id = u.id_usuario");
+  $respac = selectEspecial($conexion,"select p.id_paciente idpaciente, u.nombre unombre from pacientes p, usuarios u where p.usuario_id = u.id_usuario");
+  $errores = '';
+  
   if(isset($_POST['submit'])){
         $id = $_POST['id'];
         $id_paciente = $_POST['id_paciente'];
@@ -24,16 +31,28 @@
           $errores .= 'Dame el diagnóstico <br/>';
         }
 
-        if(empty($fecha)){
+        if(empty($fecha) or $fecha != date("Y-m-d") ){
           $errores .= 'Dame la Fecha de Ingreso <br/>';
         }
 
       if(empty($errores)){
-        $query = "update urgencias SET id_paciente={$id_paciente},id_medico={$id_medico},diagnostico='{$diagnostico}',fecha='{$fecha}' WHERE id_urgencia={$id}";
-        $actualizar = crear_registro($conexion,$query); 
-        if($actualizar){
-          redirect('urgencias.php');
-        }
+          # Consulta para evitar que existan registros iguales en la tabla
+          $res = selectEspecial($conexion,"SELECT * FROM urgencias WHERE id_paciente = {$id_paciente} AND id_medico = {$id_medico} AND diagnostico = '{$diagnostico}' AND fecha = '{$fecha}'");
+          
+          $res_id = selectEspecial($conexion,"SELECT * FROM urgencias WHERE id_paciente = {$id_paciente} AND id_medico = {$id_medico} AND diagnostico = '{$diagnostico}'  AND fecha = '{$fecha}' AND id_urgencia = {$id}");
+        
+          if($res == false){
+            $query = "update urgencias SET id_paciente={$id_paciente},id_medico={$id_medico},diagnostico='{$diagnostico}',fecha='{$fecha}' WHERE id_urgencia={$id}";
+            $actualizar = crear_registro($conexion,$query); 
+            if($actualizar){
+              redirect('urgencias.php');
+            }
+          }else if($res_id == false){
+            redirect('carreras.php');
+          }else{
+            echo "El registro ya existe. Ingrese datos Distintos.";
+          }
+
       }
   }
  ?>
@@ -52,6 +71,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php require '../menus/sidebar.php' ?>
 
   <div class="content-wrapper">
+
+         <!--Titulo dentro del contened-->
+      <section class="content-header">
+        <h1>
+          Urgencias
+          <small>Modificar urgencia.</small>
+        </h1>
+      </section>
 
     <!-- Main content -->
     <section class="content container-fluid">
@@ -73,34 +100,43 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div>
 
                 <div class="form-group">
-                    <label for="id_medico">ID del Médico</label>
+                    <label for="id_medico">Médico</label>
                     <select name="id_medico" class="form-control">
-                    <option value=" <?php echo $urge["id_medico"]?> " selected></option>
                   <?php
                     while ($row = mysqli_fetch_array($resmed)) {
-                      echo "<option value='{$row['id_medico']}'>{$row['nombre']}</option>";
+                      if($urge["id_medico"] == $row['idmedico']){
+                        $medico_m = $row['unombre'];
+                        echo "<option value={$urge['id_medico']} selected>{$medico_m}</option>";
+                      }else{
+                        echo "<option value={$row['idmedico']}>{$row['unombre']}</option>"; 
+                      }
                     }
                   ?> 
                   </select>
                   </div>
                   <div class="form-group">
-                    <label for="id_paciente">ID del Paciente</label>
+                    <label for="id_paciente">Paciente</label>
                     <select name="id_paciente" class="form-control">
-                    <option value=" <?php echo $urge["id_paciente"]?> " selected></option>
                   <?php
                     while ($row = mysqli_fetch_array($respac)) {
-                      echo "<option value='{$row['id_paciente']}'>{$row['nombre']}</option>";
+
+                      if($urge["id_paciente"] == $row['idpaciente']){
+                        $paciente_m = $row['unombre'];
+                        echo "<option value={$urge['id_paciente']} selected>{$paciente_m}</option>";
+                      }else{
+                        echo "<option value={$row['idpaciente']}>{$row['unombre']}</option>"; 
+                      }
                     }
                   ?> 
                   </select>
                   </div>
                   <div class="form-group">
                     <label for="diagnostico">Diagnóstico</label>
-                    <textarea name="diagnostico" rows="5" cols="60" class="form-control" value="<?php echo $urge["diagnostico"]?>" required></textarea>
+                    <textarea name="diagnostico" rows="5" cols="60" class="form-control" required><?php echo $urge['diagnostico']?></textarea>
                   </div>
                   <div class="form-group">
                     <label for="fecha">Fecha de Ingreso</label>
-                    <input type="date" class="form-control" name="fecha" value=" <?php echo $urge["fecha"]?> " required>
+                    <input type="date" class="form-control" name="fecha" value=<?php echo $urge['fecha']?> required>
                   </div>
               </div>
               <!-- /.box-body -->

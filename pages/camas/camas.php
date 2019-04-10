@@ -1,5 +1,11 @@
 <?php
   require '../basedatos/conexion.php';
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=3){
+    header('Location: ../../index.php');
+		exit;
+  }
+
   $res = select($conexion,'cama');
  ?>
  <!DOCTYPE html>
@@ -17,6 +23,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php require '../menus/sidebar.php' ?>
 
   <div class="content-wrapper">
+      <!--Titulo dentro del contened-->
+      <section class="content-header">
+        <h1>
+          Camas
+          <small>Tabla de camas.</small>
+        </h1>
+      </section>
+
 
     <!-- Main content -->
     <section class="content container-fluid">
@@ -59,10 +73,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <tbody>
 
                 <?php
+                  $edo = '';
                   foreach ($res as $cama) {
                     echo "<tr role=\"row\" class=\"odd\">";
                     echo "<td class=\"sorting_2\">".$cama["id_cama"]."</td>";
-                    echo "<td>".$cama["estado"]."</td>";
+                    if($cama["estado"] == 0){
+                     echo "<td><small class='label label-success'><i class='fa fa-clock-o'></i>  Desocupada</small></td>";
+                    }else{
+                      echo "<td><small class='label label-danger'><i class='fa fa-clock-o'></i>  Ocupada</small></td>";
+                    }
                     echo "<td>
                     <div class=\"btn-group\">
                       <a  href=\"borrar_cama.php?id=".$cama["id_cama"]."\" type=\"button\" class=\"btn btn-danger\"><i class=\"fa fa-fw fa-trash\"></i></a>

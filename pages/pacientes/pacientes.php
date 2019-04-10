@@ -1,5 +1,11 @@
 <?php
   require '../basedatos/conexion.php';
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=1){
+    header('Location: ../../index.php');
+		exit;
+  }
+
   $res= selectEspecial($conexion,'SELECT `id_usuario`, `nombre`, `apellido`, `sexo`, `fecha_nacimiento`, `estado`, `cel`, `e-mail`, `tipo_sangre`, `nss` FROM usuarios INNER JOIN pacientes ON usuarios.id_usuario = pacientes.usuario_id');
  ?>
  <!DOCTYPE html>
@@ -54,7 +60,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <thead>
                    <tr>
                   <th rowspan="1" colspan="5">
-                    <a  href="agregar_cuatrimestre.php">
+                    <a  href="agregar_paciente.php">
                       <h5><i class="fa fa-fw fa-gears"></i>Agregar un Nuevo Registro</h5></a>
                     </th>
                 </tr>

@@ -3,7 +3,10 @@
   $res= select($conexion,'cama');
   
   $id = $_GET['id'];
-  $delete_id = borrar_registro2($conexion,$id,'cama','id_cama');
+
+  
+
+  $delete_id = crear_registro($conexion,"DELETE FROM cama WHERE id_cama = {$id} and estado = 0");
   if($delete_id){
       echo   "Cama eliminada.";
       redirect('camas.php');

@@ -1,5 +1,10 @@
 <?php
   require '../basedatos/conexion.php';
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=3){
+    header('Location: ../../index.php');
+		exit;
+  }
 
     $table = 'cama';
     $errores = '';
@@ -30,6 +35,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php require '../menus/sidebar.php' ?>
 
   <div class="content-wrapper">
+    <!--Titulo dentro del contened-->
+      <section class="content-header">
+        <h1>
+          Camas
+          <small>Nuevo registro de cama.</small>
+        </h1>
+      </section>
 
     <!-- Main content -->
     <section class="content container-fluid">

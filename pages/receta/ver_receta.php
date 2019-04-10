@@ -1,7 +1,13 @@
 <?php
   require '../basedatos/conexion.php';
+require '../sesion/abre_sesion.php';
+  if($_SESSION['tipo']!=5){
+    header('Location: ../../index.php');
+		exit;
+  }
+
   $dato = $_GET['id'];
-  $query = "SELECT rl.id_receta_lista as id, rl.cantidad as cantidad, rl.dosis as dosis, rl.dias as dias, rl.horas as horas, m.nombre as nombre,m.imagen as imagen
+  $query = "SELECT rl.id_receta_lista as id, rl.cantidad as cantidad, rl.dosis as dosis, rl.dias as dias, rl.horas as horas, m.nombre as nombre,m.imagen as imagen, rl.entregada as entregada
   FROM receta_lista rl, medicamento m
   WHERE rl.id_medicamento = m.id_medicamento and id_receta = {$dato}";
   $res= selectEspecial($conexion,$query);
@@ -66,7 +72,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="">ID </th>
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Medicamento </th>
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label=""> Imagen </th>
-                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Cantidad</th>
+                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Cantidad Pedida</th>
+                  <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Cantidad Entregada</th>
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Dosis </th>
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Dias </th>
                   <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="">Horas </th>
@@ -81,6 +88,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     echo "<td>".$receta["nombre"]."</td>";
                     echo "<td>"."<img src=\"../medicamento/{$receta["imagen"]}\" class=\"img-circle\" alt=\"User Image\" width=\"50\" height=\"50\" align=\"center\">"."</td>";
                     echo "<td>".$receta["cantidad"]."</td>";
+                    echo "<td>".$receta["entregada"]."</td>";
                     echo "<td>".$receta["dosis"]."</td>";
                     echo "<td>".$receta["dias"]."</td>";
                     echo "<td>".$receta["horas"]."</td>";

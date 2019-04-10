@@ -5,7 +5,7 @@
   $bd ='Hospital';
   $servidor='localhost';
   $usuario='root';
-  $contrasena='estanque98';
+  $contrasena='';
 
   //creamos una conexión a la base de datos
   $conexion=mysqli_connect($servidor, $usuario,$contrasena,$bd);
@@ -19,6 +19,16 @@
   }
 
   //echo "Conectado a la base de datos $bd <br/>";
+
+function valida_usuario_bd($conexion,$usuario,$contrasena){
+    $query = "SELECT id_usuario, nombre, apellido, id_tipo FROM usuarios WHERE `nombre_usuario` = '$usuario' AND `contrasena` = '$contrasena';";
+    $resultado = mysqli_query($conexion,$query) or die('Error al ejecutar la consulta');
+    if(mysqli_num_rows($resultado)==0){
+      return false;
+    }else{
+      return $resultado;
+    }
+  }
 
 
   function select($conexion,$table){
@@ -36,7 +46,7 @@
 
 
   function selectEspecial($conexion,$query){
-
+   // echo $query;
     $resultado = mysqli_query($conexion,$query) or die('Error al ejecutar la consulta');
     if(mysqli_num_rows($resultado)==0){
       return false;
@@ -56,6 +66,18 @@
 
   }
 
+
+  function borrar_registro2($conexion,$id,$table){
+  $query = "delete from {$table} WHERE id_cita = {$id}  ;";
+     if (mysqli_query($conexion,$query)) {
+      return true;
+   } else {
+      return false;
+   }
+
+  }
+
+
 function obtener_resultado_por_id($conexion,$id,$table){
    $query = "select * from {$table} where id = {$id}  LIMIT 1";
   $resultado = mysqli_query($conexion,$query) or die('Error al ejecutar la consulta');
@@ -69,14 +91,15 @@ function obtener_resultado_por_id($conexion,$id,$table){
 
   }
 
-
-
   function crear_registro($conexion,$query){
       if (mysqli_query($conexion,$query)) {
           return true;
+          echo "si";
       } else {
           return false;
+          echo "no";
       }
+    
   }
 
 

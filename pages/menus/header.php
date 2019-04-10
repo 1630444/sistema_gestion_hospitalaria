@@ -137,14 +137,14 @@ if(!defined('RAIZ')){
           <!-- Menu Toggle Button -->
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <!-- The user image in the navbar-->
-            <img src="<?php echo RAIZ . 'dist/img/yo.jpg' ?>" class="user-image" alt="User Image">
+            <img src="<?php echo RAIZ . 'dist/img/profile.ico' ?>" class="user-image" alt="User Image">
             <!-- hidden-xs hides the username on small devices so only the image appears. -->
-            <span class="hidden-xs">Programacion WEB</span>
+            <span class="hidden-xs"><?php echo utf8_encode($_SESSION["nombre"].' '.$_SESSION["apellido"]); ?></span>
           </a>
           <ul class="dropdown-menu">
             <!-- The user image in the menu -->
             <li class="user-header">
-              <img src="<?php echo RAIZ . 'dist/img/yo.jpg' ?>" class="img-circle" alt="User Image">
+              <img src="<?php echo RAIZ . 'dist/img/profile.ico' ?>" class="img-circle" alt="User Image">
 
 
             </li>
