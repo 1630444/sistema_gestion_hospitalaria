@@ -1,7 +1,10 @@
 
 
-
+TUTORIAL DE IMPLEMENTACIÓN
 ------------------------------------------------------------------------------------------
+1. Ubicar la carpeta en la carpeta publica del servidor a usar ('/var/www/html' si se usa LAMP).
+
+2. Se debe importar el archivo 'Hospital.sql' en una base de datos MySQL llamada 'Hospital'
 
 CONFIGURACIÓN DE BASE DE DATOS
   Se debe configurar las variables 'servidor', 'usuario' y 'contrasena' correspondientes
